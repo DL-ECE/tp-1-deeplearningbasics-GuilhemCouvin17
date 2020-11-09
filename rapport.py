@@ -372,9 +372,6 @@ Also explain how the neural network behave when changing them ?
 
 ## Open analysis answer
 
-TODO
-"""
-
 minibatch_size: 
 - Avec un minibatch de taille 5, l'accuracy augmente lentement. 
 - Contrairement à un minibatch de taille 10. Un petit minibatch rallonge donc le processus
@@ -406,3 +403,4 @@ Mon choix:
 - learning_rate = 0.05
   Le learning rate est légèrement plus grand que celui par défaut car il ne diverge pas 
   et les pas sont suffisament grand pour se rapprocher rapidement du minimum
+"""
