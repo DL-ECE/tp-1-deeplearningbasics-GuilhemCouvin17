@@ -136,7 +136,7 @@ def sigmoid(M: np.array) -> np.array:
 def d_sigmoid(M: np.array)-> np.array:
     """Compute the derivative of the sigmoid""" 
     # DONE
-    DF_sigmoid=(sigmoid(M)/(1-sigmoid(M)))
+    DF_sigmoid=(sigmoid(M)*(1-sigmoid(M)))
     return DF_sigmoid
 
 def softmax(X: np.array)-> np.array:
@@ -316,7 +316,7 @@ for i in range(1,5):
 
 minibatch_size = 10
 nepoch = 10
-learning_rate = 0.001
+learning_rate = 0.01
 
 ffnn = FFNN(config=[784, 10, 5, 8, 10], minibatch_size=minibatch_size, learning_rate=learning_rate)
 
