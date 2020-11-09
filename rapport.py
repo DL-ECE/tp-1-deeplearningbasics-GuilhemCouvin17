@@ -311,14 +311,11 @@ It's on 12 points because there is a lot of functions to fill but also we want t
 To have all the point your neural network needs to have a Test accuracy > 92 % !!
 """
 
-for i in range(1,5):
-    print(i)
-
 minibatch_size = 10
-nepoch = 10
-learning_rate = 0.01
+nepoch = 5
+learning_rate = 0.05
 
-ffnn = FFNN(config=[784, 10, 5, 8, 10], minibatch_size=minibatch_size, learning_rate=learning_rate)
+ffnn = FFNN(config=[784, 500, 10], minibatch_size=minibatch_size, learning_rate=learning_rate)
 
 assert X_train.shape[0] % minibatch_size == 0
 assert X_test.shape[0] % minibatch_size == 0
@@ -344,22 +341,23 @@ X_demo = X_test[:nsample,:]
 y_demo = ffnn.forward_pass(X_demo)
 y_true = y_test[:nsample,:]
 
-index_to_plot = 50 
+index_to_plot = 155 
 plot_one_image(X_demo, y_true, index_to_plot)
 
 # Compare to the prediction 
 prediction = np.argmax(y_demo[index_to_plot,:])
 true_target = np.argmax(y_true[index_to_plot,:])
 
-# is it the same number ?
+# is it the same number ? yes.
 
 # loop arround the demo test set and try to find a miss prediction
+pred_error = 0
 for i in range(0, nsample):   
-    prediction = None # Todo
-    true_target = None # Todo
+    prediction = np.argmax(ffnn.forward_pass(X_demo)[i,:]) # DONE
+    true_target = np.argmax(y_test[:nsample,:][i,:]) # DONE
     if prediction != true_target:
-        # TODO
-        pass
+        pred_error += 1
+print(pred_error," errors of prediction")
 
 """## Open analysis
 
@@ -377,3 +375,34 @@ Also explain how the neural network behave when changing them ?
 TODO
 """
 
+minibatch_size: 
+- Avec un minibatch de taille 5, l'accuracy augmente lentement. 
+- Contrairement à un minibatch de taille 10. Un petit minibatch rallonge donc le processus
+
+nepoch: nepoch a une influence sur la durée du processus en fonction de la complexité.
+- Avec nepoch = 10 et config=[784, 25,35, 10] on atteint plus rapidement les 90% d'accuracy
+- Avec nepoch = 5 il faut une config avec beaucoup plus de neurones pour obtenir des résultats similaires ou supérieurs 
+  (et c'est beaucoup plus long)
+
+config: 
+- Trop de couche provoque de l'overfitting et fausse donc l'accuracy
+- Pour un modèle "simple", peu de couche est préférable
+- Le nombre de neurones a une grande influence sur l'accuracy, plus il y en a, plus l'algo est précis 
+  mais plus les calculs sont longs aussi
+
+Learning rate: 
+- Un learning trop petit (0,001) fait évoluer le modèle trop lentement et on obtient donc une accuracy basse
+- Un learning trop grand (0,25) fait diverger la descente de gradient
+
+Mon choix: 
+- minibatch_size = 10
+- nepoch = 5
+  Le minibatch de taille 10 et le nombre d'epoch de 5 permet de diminuer le temps de compute
+
+- config=[784,500,10]
+  Bien que le grand nombre de neurones augmente beaucoup la durée des calculs, 
+  ce grand nombre nous permet d'obtenir une plus grande précision (Training accuracy: 0.981, Test accuracy: 0.954)
+
+- learning_rate = 0.05
+  Le learning rate est légèrement plus grand que celui par défaut car il ne diverge pas 
+  et les pas sont suffisament grand pour se rapprocher rapidement du minimum
